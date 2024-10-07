@@ -12,6 +12,7 @@ See the Mulan PSL v2 for more details. */
 // Created by Meiyi & Wangyunlai on 2021/5/13.
 //
 
+#include <cstdio>
 #include <limits.h>
 #include <string.h>
 
@@ -27,9 +28,12 @@ See the Mulan PSL v2 for more details. */
 #include "storage/common/meta_util.h"
 #include "storage/index/bplus_tree_index.h"
 #include "storage/index/index.h"
+#include "storage/index/index_meta.h"
 #include "storage/record/record_manager.h"
 #include "storage/table/table.h"
 #include "storage/trx/trx.h"
+
+#include "storage/common/meta_util.h" 
 
 Table::~Table()
 {
@@ -126,6 +130,35 @@ RC Table::create(Db *db, int32_t table_id, const char *path, const char *name, c
   LOG_INFO("Successfully create table %s:%s", base_dir, name);
   return rc;
 }
+
+RC Table::drop(){
+  string meta_file_path = table_meta_file(base_dir_.c_str(),name());
+  string data_file_path = table_data_file(base_dir_.c_str(),name());
+
+  // 到析构函数下看怎么关闭bufferpool
+  if (data_buffer_pool_ != nullptr) {
+    data_buffer_pool_->close_file();
+    data_buffer_pool_ = nullptr;
+  }
+
+  ::remove(meta_file_path.c_str());
+  ::remove(data_file_path.c_str());
+
+  for(int i=0;i<table_meta_.index_num();i++){
+    const IndexMeta *idx = table_meta_.index(i);
+    string index_file_path = table_index_file(base_dir_.c_str(),name(),idx->name());
+    // 注意删除先后顺序
+    delete idx;
+    ::remove(index_file_path.c_str());
+  }
+
+  indexes_.clear();
+  
+  return RC::SUCCESS;  
+
+}
+
+
 
 RC Table::open(Db *db, const char *meta_file, const char *base_dir)
 {
