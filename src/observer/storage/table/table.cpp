@@ -145,10 +145,11 @@ RC Table::drop(){
   ::remove(data_file_path.c_str());
 
   for(int i=0;i<table_meta_.index_num();i++){
-    const IndexMeta *idx = table_meta_.index(i);
-    string index_file_path = table_index_file(base_dir_.c_str(),name(),idx->name());
+    auto &idx = indexes_[i];
+    string index_file_path = table_index_file(base_dir_.c_str(),name(),idx->index_meta().name());
     // 注意删除先后顺序
     delete idx;
+    idx = nullptr;
     ::remove(index_file_path.c_str());
   }
 
