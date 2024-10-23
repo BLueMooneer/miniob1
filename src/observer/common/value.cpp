@@ -19,6 +19,7 @@ See the Mulan PSL v2 for more details. */
 #include "common/lang/sstream.h"
 #include "common/lang/string.h"
 #include "common/log/log.h"
+#include "value.h"
 
 Value::Value(int val) { set_int(val); }
 
@@ -113,6 +114,15 @@ void Value::set_data(char *data, int length)
     case AttrType::CHARS: {
       set_string(data, length);
     } break;
+    
+
+    // 添加DATES
+    case  AttrType::DATES:
+		{
+			value_.int_value_ = *( int * ) data;
+			length_ = length;
+		} break;
+
     case AttrType::INTS: {
       value_.int_value_ = *(int *)data;
       length_           = length;
@@ -175,12 +185,28 @@ void Value::set_string(const char *s, int len /*= 0*/)
   }
 }
 
-void Value::set_value(const Value &value)
+// 添加定义
+void Value::set_date(int date) 
+{
+  reset();
+  attr_type_         = AttrType::DATES;
+  value_.bool_value_ = date;
+  length_            = sizeof(int); 
+
+}
+
+void Value::set_value(const Value &value) 
 {
   switch (value.attr_type_) {
     case AttrType::INTS: {
       set_int(value.get_int());
     } break;
+
+    // 添加date
+    case AttrType::DATES: {
+      set_int(value.get_int());
+    }break;
+
     case AttrType::FLOATS: {
       set_float(value.get_float());
     } break;
@@ -242,6 +268,10 @@ int Value::get_int() const
         return 0;
       }
     }
+    case AttrType::DATES:{
+      return value_.int_value_;
+    }
+
     case AttrType::INTS: {
       return value_.int_value_;
     }

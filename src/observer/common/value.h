@@ -87,6 +87,10 @@ public:
   void set_type(AttrType type) { this->attr_type_ = type; }
   void set_data(char *data, int length);
   void set_data(const char *data, int length) { this->set_data(const_cast<char *>(data), length); }
+
+  // 添加一个set_date
+  void set_date(int date);
+  
   void set_value(const Value &value);
   void set_boolean(bool val);
 

@@ -10,20 +10,25 @@ See the Mulan PSL v2 for more details. */
 
 #pragma once
 
-/**
- * @brief 属性的类型
- * @details AttrType 枚举列出了属性的各种数据类型。
- */
-enum class AttrType
-{
-  UNDEFINED,
-  CHARS,     ///< 字符串类型
-  DATES,     ///< 日期类型
-  INTS,      ///< 整数类型(4字节)
-  FLOATS,    ///< 浮点数类型(4字节)
-  BOOLEANS,  ///< boolean类型，当前不是由parser解析出来的，是程序内部使用的
-  MAXTYPE,   ///< 请在 UNDEFINED 与 MAXTYPE 之间增加新类型
-};
+#include "common/rc.h"
+#include "common/type/data_type.h"
 
-const char *attr_type_to_string(AttrType type);
-AttrType    attr_type_from_string(const char *s);
+/**
+ * @brief 日期类型
+ * @ingroup DataType
+ */
+
+class DateType : public DataType
+{
+public:
+  DateType() : DataType(AttrType::CHARS) {}
+
+  virtual ~DateType() = default;
+
+   // 重写以下三个方法
+  int compare(const Value &left, const Value &right) const override;
+  // 从文件中导入数据
+  RC set_value_from_str(Value &val, const string &data) const override;
+
+  RC to_string(const Value &val, string &result) const override;
+};
