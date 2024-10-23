@@ -29,6 +29,5 @@ public:
   int compare(const Value &left, const Value &right) const override;
   // 从文件中导入数据
   RC set_value_from_str(Value &val, const string &data) const override;
-
   RC to_string(const Value &val, string &result) const override;
 };

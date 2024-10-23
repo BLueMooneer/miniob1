@@ -36,7 +36,7 @@ static RC chars_to_dates(const char *str,int n,int& date){
       return RC::INVALID_DATE;
     }
 
-    if(day <=0 ||day > day_of_month[month-1]+(month == 2 && is_lunar_year(year)?1:0)){
+    if(day <=0 || day > day_of_month[month-1]+(month == 2 && is_lunar_year(year)?1:0)){
       return RC::INVALID_DATE;
     }
 
@@ -68,7 +68,8 @@ RC CharType::cast_to(const Value &val, AttrType type, Value &result) const
         LOG_WARN("Invalid Date format, rc = %s",strrc(rc));
         return rc;
       }
-      result.set_date(date);
+      result.set_type(AttrType::DATES);
+      result.set_data((char*)&date,sizeof(date));
     }break;
     default: return RC::UNIMPLEMENTED;
   }

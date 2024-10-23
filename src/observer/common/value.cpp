@@ -117,9 +117,9 @@ void Value::set_data(char *data, int length)
     
 
     // 添加DATES
-    case  AttrType::DATES:
+    case AttrType::DATES:
 		{
-			value_.int_value_ = *( int * ) data;
+			value_.int_value_ = *( int * )data;
 			length_ = length;
 		} break;
 

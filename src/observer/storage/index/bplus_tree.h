@@ -24,6 +24,7 @@ See the Mulan PSL v2 for more details. */
 #include "common/lang/sstream.h"
 #include "common/lang/functional.h"
 #include "common/log/log.h"
+#include "common/type/date_type.h"
 #include "sql/parser/parse_defs.h"
 #include "storage/buffer/disk_buffer_pool.h"
 #include "storage/record/record_manager.h"
@@ -67,13 +68,37 @@ public:
   int operator()(const char *v1, const char *v2) const
   {
     // TODO: optimized the comparison
-    Value left;
-    left.set_type(attr_type_);
-    left.set_data(v1, attr_length_);
-    Value right;
-    right.set_type(attr_type_);
-    right.set_data(v2, attr_length_);
-    return DataType::type_instance(attr_type_)->compare(left, right);
+    // Value left;
+    // left.set_type(attr_type_);
+    // left.set_data(v1, attr_length_);
+    // Value right;
+    // right.set_type(attr_type_);
+    // right.set_data(v2, attr_length_);
+    switch ( attr_type_ )
+		{
+			case AttrType::INTS:
+			{
+				return common::compare_int( ( void * ) v1, ( void * ) v2 );
+			} break;
+			case AttrType::FLOATS:
+			{
+				return common::compare_float( ( void * ) v1, ( void * ) v2 );
+			}
+			case AttrType::CHARS:
+			{
+				return common::compare_string( ( void * ) v1, attr_length_, ( void * ) v2, attr_length_ );
+			}
+			case AttrType::DATES:
+			{
+        return common::compare_int( ( void * ) v1, ( void * ) v2 );
+			}
+			default:
+			{
+				ASSERT( false, "unknown attr type. %d", attr_type_ );
+				return 0;
+			}
+		}
+    //return DataType::type_instance(attr_type_)->compare(left, right);
   }
 
 private:

@@ -5,7 +5,7 @@
 
 int DateType::compare(const Value &left, const Value &right) const { 
    ASSERT(left.attr_type() == AttrType::DATES, "left type is not date");
-   ASSERT(right.attr_type() == AttrType::INTS || right.attr_type() == AttrType::FLOATS, "right type is not date");
+   ASSERT(right.attr_type() == AttrType::DATES, "right type is not date");
    return left.get_int()-right.get_int();
 }
 
