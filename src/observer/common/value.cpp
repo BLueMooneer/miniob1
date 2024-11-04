@@ -190,9 +190,9 @@ void Value::set_date(int date)
 {
   reset();
   attr_type_         = AttrType::DATES;
-  value_.bool_value_ = date;
+  value_.int_value_ = date;
   length_            = sizeof(int); 
-
+  
 }
 
 void Value::set_value(const Value &value) 

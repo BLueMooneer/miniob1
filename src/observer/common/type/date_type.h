@@ -21,7 +21,7 @@ See the Mulan PSL v2 for more details. */
 class DateType : public DataType
 {
 public:
-  DateType() : DataType(AttrType::CHARS) {}
+  DateType() : DataType(AttrType::DATES) {}
 
   virtual ~DateType() = default;
 

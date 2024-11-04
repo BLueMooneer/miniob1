@@ -69,7 +69,8 @@ RC CharType::cast_to(const Value &val, AttrType type, Value &result) const
         return rc;
       }
       result.set_type(AttrType::DATES);
-      result.set_data((char*)&date,sizeof(date));
+      //result.set_data((char*)&date,sizeof(date));
+      result.set_date(date);
     }break;
     default: return RC::UNIMPLEMENTED;
   }
